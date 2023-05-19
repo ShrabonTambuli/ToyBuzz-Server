@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 require('dotenv').config()
 const port = process.env.PORT || 5000;
@@ -29,17 +29,30 @@ async function run() {
 
     const productCollection = client.db('toybuzz').collection('product');
 
-    app.get ('/product', async(req, res) =>{
-        const cursor = productCollection.find();
-        const result = await cursor.toArray();
-        res.send(result);
+    app.get('/product', async (req, res) => {
+      const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
     })
 
-    app.post ('/product', async(req, res) =>{
-        const addProduct = req.body;
-        const result = await productCollection.insertOne(addProduct);
-        res.send(result);
-        console.log(addProduct);
+    app.get('/product/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id)}
+      const result = await productCollection.findOne(query)
+      res.send(result);
+    })
+
+    //   app.get ('/product', async(req, res) =>{
+    //     console.log(req.query);
+
+    //     const result = await productCollection.find().toArray();
+    //     res.send(result);
+    // })
+
+    app.post('/product', async (req, res) => {
+      const addProduct = req.body;
+      const result = await productCollection.insertOne(addProduct);
+      res.send(result);
     })
 
     // Send a ping to confirm a successful connection
@@ -55,10 +68,10 @@ run().catch(console.dir);
 
 
 
-app.get('/', (req, res)=>{
-    res.send('Assignment-11 update......')
+app.get('/', (req, res) => {
+  res.send('Assignment-11 update......')
 })
 
-app.listen(port, ()=>{
-    console.log(`Assignment-11 Server is running port:${port}`)
+app.listen(port, () => {
+  console.log(`Assignment-11 Server is running port:${port}`)
 })
