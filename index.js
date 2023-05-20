@@ -48,6 +48,7 @@ async function run() {
       if(req.query?.email){
         query = {email: req.query.email}
       }
+      
       const result = await productCollection.find(query).toArray();
       res.send(result);
     })
