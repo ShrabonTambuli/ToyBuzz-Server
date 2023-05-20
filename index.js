@@ -43,12 +43,11 @@ async function run() {
     })
 
     app.get('/my-products', async (req, res) => {
-      console.log(req.query);
       let query = {};
       if(req.query?.email){
         query = {email: req.query.email}
       }
-      
+
       const result = await productCollection.find(query).toArray();
       res.send(result);
     })
@@ -56,6 +55,13 @@ async function run() {
     app.post('/product', async (req, res) => {
       const addProduct = req.body;
       const result = await productCollection.insertOne(addProduct);
+      res.send(result);
+    })
+
+    app.delete('/my-products/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await productCollection.deleteOne(query);
       res.send(result);
     })
 
