@@ -24,7 +24,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+     client.connect();
 
 
     const productCollection = client.db('toybuzz').collection('product');
@@ -42,13 +42,14 @@ async function run() {
       res.send(result);
     })
 
+    // get email all data....//
+
     app.get('/my-products', async (req, res) => {
       let query = {};
       if(req.query?.email){
         query = {email: req.query.email}
       }
-
-      const result = await productCollection.find(query).toArray();
+     const result = await productCollection.find(query).toArray();
       res.send(result);
     })
 
@@ -59,11 +60,15 @@ async function run() {
       res.send(result);
     })
 
+    // post operation....//
+
     app.post('/product', async (req, res) => {
       const addProduct = req.body;
       const result = await productCollection.insertOne(addProduct);
       res.send(result);
     })
+
+    // put operation....//
 
     app.put('/product/:id', async(req, res) =>{
       const id = req.params.id;
@@ -81,6 +86,8 @@ async function run() {
       const result = await productCollection.updateOne(filter, toy, options)
       res.send(result);
     })
+
+    // delete operation....//
 
     app.delete('/my-products/:id', async(req, res)=>{
       const id = req.params.id;
